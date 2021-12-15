@@ -1,17 +1,22 @@
 ﻿#pragma once
 #include"Configure.h"
 #include<set>
-struct SEvent
-{
-	int type;
-};
+
+class SObject;
+class SEvent;
+
 class SApplication
 {
 public:
 	SApplication(int argc, char* argv[]);
 	~SApplication();
+
+	virtual bool notify(SObject* receiver, SEvent* event);
+
 	static SApplication* instance();
-	static int exec();
+	int exec();
 	inline static std::set<SEvent*> eventQueue;
+private:
+	bool handingEvent();
 };
 

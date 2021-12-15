@@ -21,7 +21,7 @@
     <ClCompile Include="SApplication.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="SObject.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SGeometry.cpp">
@@ -33,9 +33,12 @@
     <ClCompile Include="SWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SEvent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Test.h">
+    <ClInclude Include="SObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SApplication.h">
@@ -51,6 +54,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SEvent.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

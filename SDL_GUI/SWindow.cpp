@@ -14,6 +14,8 @@ SWindow::SWindow(int w, int h)
 		SDL_Log("window create failed %s\n", SDL_GetError());
 		return;
 	}
+	SWidget::setWindowPos(0, 0);
+	SWidget::setWindowSize(_width, _height);
 	_winRenderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
 	s_instance = this;
 }
@@ -139,5 +141,13 @@ SWindow::operator SDL_Renderer* ()
 
 SWindow* SWindow::instance()
 {
+	if (s_instance == nullptr)
+		throw nullptr;
 	return s_instance;
+}
+
+bool SWindow::event(SEvent* ev)
+{
+	SDL_Log("SWindow event\n");
+	return false;
 }
