@@ -30,6 +30,32 @@ SApplication* SApplication::instance()
 	return g_instance;
 }
 
+SObject* findLastChild(SObject* obj, int x, int y)
+{
+	SObject* returnObj = nullptr;
+	for (auto child : obj->children())
+	{
+		auto* widget = dynamic_cast<SWidget*>(child);
+		
+		SPoint leftTop(0,0);
+		auto* parentWidget = dynamic_cast<SWidget*>(widget->parent());
+		if (parentWidget)
+		{
+			leftTop = parentWidget->windowPos();
+		}
+		if (widget && widget->frameGeometry().contains(x, y))
+		{
+			if (!widget->children().empty())
+				returnObj = findLastChild(widget,x-leftTop.x, y-leftTop.y);
+			return widget;
+		}
+		//SRect r = widget->frameGeometry();
+		//SDL_Log("%d %d %d %d\n", r.x1(), r.y1(), r.x2(), r.y2());			
+	}
+	return returnObj;
+}
+
+
 bool SApplication::handingEvent()
 {
 	static SDL_Event ev;
@@ -45,28 +71,38 @@ bool SApplication::handingEvent()
 			SEvent* mouseEv = new SMouseEvent(SDL_MOUSEBUTTONDOWN, SPoint(ev.button.x, ev.button.y));
 			//SApplication::eventQueue.insert(new SMouseEvent(SDL_MOUSEBUTTONDOWN, SPoint(ev.button.x, ev.button.y)));
 			//SDL_Log("mousepos %d %d\n", ev.button.x, ev.button.y);
-			bool isInChild = false;	//鼠标事件是否在孩子上
-			for (auto child : SWindow::instance()->children())
+			//鼠标事件是否在孩子上
+			auto* widget = findLastChild(root, ev.button.x, ev.button.y);
+			if (widget)
 			{
-				auto* widget = dynamic_cast<SWidget*>(child);
-				if (widget && widget->frameGeometry().contains(ev.button.x, ev.button.y))
-				{
-					notify(child, mouseEv);
-					isInChild = true;
-				}		
-				//SRect r = widget->frameGeometry();
-				//SDL_Log("%d %d %d %d\n", r.x1(), r.y1(), r.x2(), r.y2());			
+				std::clog << ((SWidget*)widget) << std::endl;
+				notify(widget, mouseEv);
 			}
 			//没有在任何孩子身上，就传给主窗口
-			if (!isInChild)
+			else
 			{
 				notify(root, mouseEv);
 			}
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
-			SApplication::eventQueue.insert(new SMouseEvent(SDL_MOUSEBUTTONUP, SPoint(ev.button.x, ev.button.y)));
+		{
+			//SApplication::eventQueue.insert(new SMouseEvent(SDL_MOUSEBUTTONUP, SPoint(ev.button.x, ev.button.y)));
+			SEvent* mouseEv = new SMouseEvent(SDL_MOUSEBUTTONUP, SPoint(ev.button.x, ev.button.y));
+			//鼠标事件是否在孩子上
+			auto* widget = findLastChild(root, ev.button.x, ev.button.y);
+			if (widget)
+			{
+				notify(widget, mouseEv);
+			}
+			//没有在任何孩子身上，就传给主窗口
+			else
+			{
+				notify(root, mouseEv);
+			}
 			break;
+		}
+		break;
 		default:
 			break;
 		}
@@ -81,7 +117,7 @@ int SApplication::exec()
 	{
 		isDone = handingEvent();
 	}
-    return 0;
+	return 0;
 }
 
 

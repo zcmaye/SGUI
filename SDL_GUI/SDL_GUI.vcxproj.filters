@@ -36,6 +36,9 @@
     <ClCompile Include="SEvent.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SColor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SObject.h">
@@ -57,6 +60,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SEvent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SColor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

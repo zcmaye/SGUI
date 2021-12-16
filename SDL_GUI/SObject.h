@@ -2,8 +2,10 @@
 #include<vector>
 #include<iostream>
 #include"SGeometry.h"
+#include"SColor.h"
 
 class SEvent;
+class SMouseEvent;
 class SSurface;
 class SObject;
 
@@ -14,9 +16,12 @@ class SObject
 public:
 	SObject(SObject* parent = nullptr);
 	virtual ~SObject();
+	SObject* parent();
 	void setParent(SObject* parent);
 	inline  const SObjectSet& children() const { return _children; }
 	void clearChildern();
+
+	
 public:
 	virtual bool  event(SEvent* ev);
 protected:
@@ -41,16 +46,16 @@ struct SWidget:public SObject
 	}
 
 	//获取窗口坐标
-	SPoint windowPos();
+	SPoint windowPos()const;
 	void setWindowPos(int x, int y);
 	//获取窗口大小
-	SSize windowSize();
+	SSize windowSize()const;
 	void setWindowSize(int w, int h);
 	//获取窗口标题
-	std::string windowTitle();
+	std::string windowTitle()const;
 	void setWindowTitle(const std::string& title);
 	//设置窗口图标
-	SSurface* windowIcon();
+	SSurface* windowIcon()const;
 	void setWindowIcon(SSurface* icon);
 	//隐藏窗口
 	void hide();
@@ -59,16 +64,26 @@ struct SWidget:public SObject
 	//提升窗口层级
 	void raise();
 	//设置不透明度
-	float windowOpacity();
+	float windowOpacity()const;
 	void setWindowOpacity(float opacity);
 	//获取窗口几何区域
-	SRect frameGeometry();
+	SRect frameGeometry()const;
 
 	//更新窗口
 	void  update();
+	//设置颜色
+	void setBackgroundColor(SColor c = SColor::White);
+
+
+	SPoint mapFromParent(const SPoint& point);		//把父对象的坐标转为本对象的坐标
+public:
+	friend std::ostream& operator<<(std::ostream& out, const SWidget& widget);
+	friend std::ostream& operator<<(std::ostream& out, const SWidget*const widget);
 protected:
 	bool  event(SEvent* ev) override;
-	void paintEvent();
+	virtual void paintEvent();
+	virtual void mousePressEvent(SMouseEvent*ev);
+	virtual void mouseReleaseEvent(SMouseEvent* ev);
 private:
 	std::string _title;
 	SPoint		_pos;
@@ -77,6 +92,8 @@ private:
 	float		_opacity;
 
 	bool		_isHiden;	//是隐藏的？
-	int			_z;			//层级
+	int			_z;			//层级	
+
+	SColor		_bkColor;	//背景颜色
 
 };

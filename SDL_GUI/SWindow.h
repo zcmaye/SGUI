@@ -46,7 +46,7 @@ public:
 	operator SDL_Renderer* ();
 	static SWindow* instance();
 protected:
-	bool event(SEvent* ev)override;
+	//bool event(SEvent* ev)override;
 private:
 	int _width;
 	int _height;

@@ -3,6 +3,7 @@
 #include"SWindow.h"
 #include"SEvent.h"
 #define MAXZ	10		//窗口最大层级
+using namespace std;
 /*@ SObject*/
 
 SObject::SObject(SObject* parent)
@@ -19,13 +20,22 @@ SObject::~SObject()
 	//1,先释放孩子
 	if(!_children.empty())
 		this->clearChildern();
-	if (!isFree)
+
+	if (_parent)
 	{
-		isFree = true;
-		delete this;
+		//把this从原来的父对象的孩子列表中移除
+		auto it = std::find(_parent->_children.begin(), _parent->_children.end(),this);
+		if (it != _parent->_children.end())
+		{
+			_parent->_children.erase(it);
+		}
 	}
 
 	std::cout << "~SObject destroy" << std::endl;
+}
+SObject* SObject::parent()
+{
+	return _parent;
 }
 void SObject::setParent(SObject* parent)
 {
@@ -76,7 +86,7 @@ void SWidget::raise()
 	_z = MAXZ;
 }
 
-float SWidget::windowOpacity()
+float SWidget::windowOpacity()const
 {
 	return _opacity;
 }
@@ -86,13 +96,13 @@ void SWidget::setWindowOpacity(float opacity)
 	_opacity = opacity;
 }
 
-SRect SWidget::frameGeometry()
+SRect SWidget::frameGeometry()const
 {
 	return SRect(_pos,_size);
 }
 
 
-SPoint SWidget::windowPos()
+SPoint SWidget::windowPos()const
 {
 	return _pos;
 }
@@ -103,7 +113,7 @@ void SWidget::setWindowPos(int x, int y)
 	_pos.y = y;
 }
 
-SSize SWidget::windowSize()
+SSize SWidget::windowSize()const
 {
 	return _size;
 }
@@ -114,7 +124,7 @@ void SWidget::setWindowSize(int w, int h)
 	_size.h = h;
 }
 
-std::string SWidget::windowTitle()
+std::string SWidget::windowTitle()const
 {
 	return _title;
 }
@@ -124,7 +134,7 @@ void SWidget::setWindowTitle(const std::string& title)
 	_title = title;
 }
 
-SSurface* SWidget::windowIcon()
+SSurface* SWidget::windowIcon()const
 {
 	return _icon;
 }
@@ -144,6 +154,11 @@ void SWidget::update()
 	event(new SEvent(SEvent::Paint));
 }
 
+void SWidget::setBackgroundColor(SColor c)
+{
+	_bkColor = c;
+}
+
 bool SWidget::event(SEvent* ev)
 {
 	switch (ev->type())
@@ -151,10 +166,32 @@ bool SWidget::event(SEvent* ev)
 	case SEvent::Paint:
 		paintEvent();
 		break;
+	case SDL_MOUSEBUTTONDOWN:
+		mousePressEvent((SMouseEvent*)ev);
+		break;
+	case SDL_MOUSEBUTTONUP:
+		mouseReleaseEvent((SMouseEvent*)ev);
+		break;
 	default:
 		break;
 	}
-	SDL_Log(" SWidget  event %s\n",_title.c_str());
+	//cout << this << " " << ev << endl;
+	//如果事件是接受的，则销毁
+	if (ev->isAccepted())
+	{
+		delete ev;
+	}
+	//如果有父组件，则传给父组件
+	else if(_parent)
+	{
+		this->_parent->event(ev);
+	}
+	//否则销毁事件
+	else
+	{
+		delete ev;
+	}
+	
 	return false;
 }
 
@@ -163,9 +200,57 @@ void SWidget::paintEvent()
 	 auto *renderer = SWindow::instance()->renderer();
 	 if (!renderer)
 		 return;
-
-	 auto rect =  frameGeometry().sdlRect();
-	 SDL_SetRenderDrawColor(renderer, 194, 195, 201,255);
-	 SDL_RenderFillRect(renderer, &rect);
+	 
+	 SPoint leftTop;
+	 if (_parent)
+	 {
+		 auto widget = dynamic_cast<SWidget*>(_parent);
+		 if (widget)
+			 leftTop = widget->windowPos() +this->windowPos();
+	 }
+	 else
+	 {
+		 leftTop = this->windowPos();
+	 }
+	 const SDL_Rect& sdlRect = SRect(leftTop, this->windowSize()).sdlRect();
+	 SDL_SetRenderDrawColor(renderer, _bkColor.red(), _bkColor.green(), _bkColor.blue(), _bkColor.alpha());
+	 SDL_RenderFillRect(renderer, &sdlRect);
 	 SDL_RenderPresent(renderer);
+	 //SDL_Log("paintEvent\n");
+}
+
+void SWidget::mousePressEvent(SMouseEvent* ev)
+{
+	//SDL_Log("mousePressEvent\n");
+	//ev->ignore();
+}
+
+void SWidget::mouseReleaseEvent(SMouseEvent* ev)
+{
+	//SDL_Log("mouseReleaseEvent\n");
+}
+
+//250 250
+//0 0 500 500
+//20 20 400 400 ->
+
+SPoint SWidget::mapFromParent(const SPoint& point)
+{
+	if (_parent)
+		return SPoint(this->_pos.x - point.x, this->_pos.y - point.y);
+	else
+		return point;
+}
+
+
+std::ostream& operator<<(std::ostream& out, const SWidget& widget)
+{
+	out << "SWidget(" << /*&widget*/widget.frameGeometry() << "," << widget._title << ") ";
+	return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const SWidget* const widget)
+{
+	out << "SWidget(" << /*(int*)widget*/widget->frameGeometry() << "," << widget->_title << ") ";
+	return out;
 }

@@ -1,9 +1,11 @@
-#pragma once
+﻿#pragma once
 #include<SDL_rect.h>
+#include<iostream>
 struct SPoint
 {
 	SPoint();
 	SPoint(int x, int y);
+	SPoint operator+(const SPoint& point) const;
 	int x;
 	int y;
 };
@@ -37,6 +39,7 @@ public:
 	{ 
 		return SDL_Rect{ _x1,_y1, _x2 - _x1,_y2 - _y1 }; 
 	}
+	friend std::ostream& operator<<(std::ostream& out, const SRect& rect);
 
 private:
 	int _x1;

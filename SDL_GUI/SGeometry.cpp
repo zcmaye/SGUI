@@ -10,6 +10,11 @@ SPoint::SPoint(int x, int y)
 {
 }
 
+SPoint SPoint::operator+(const SPoint& point) const
+{
+	return SPoint(this->x + point.x, this->y + point.y);
+}
+
 SSize::SSize()
 	: w(0), h(0)
 {
@@ -67,3 +72,9 @@ bool SRect::contains(int x, int y) const
 	return false;
 }
 
+
+std::ostream& operator<<(std::ostream& out, const SRect& rect)
+{
+	out << "SRect(" << rect._x1 << "," << rect._y1 << "," << rect._x2 << "," << rect._y2;
+	return out;
+}

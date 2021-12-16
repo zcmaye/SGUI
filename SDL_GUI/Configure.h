@@ -1,20 +1,22 @@
-#pragma once
+ï»¿#pragma once
 
 #include<SDL.h>
 #include<SDL_image.h>
 #include<string>
 #include"SGeometry.h"
 
+#define clog cout<<"[line "<<__LINE__<<"]:"
+
 #ifdef SDL_IMAGE_H_
-#define HAVE_IMAGE	//ÓÐSDL_image
+#define HAVE_IMAGE	//æœ‰SDL_image
 #endif 
 
 #ifdef SDL_TTF_H_
-#define HAVE_TTF	//ÓÐSDL_ttf
+#define HAVE_TTF	//æœ‰SDL_ttf
 #endif 
 
 #ifdef SDL_MIXER_H_
-#define HAVE_MIXER	//ÓÐSDL_mixer
+#define HAVE_MIXER	//æœ‰SDL_mixer
 #endif 
 
 

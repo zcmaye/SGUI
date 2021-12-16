@@ -90,6 +90,7 @@ void SWindow::hide()
 void SWindow::show()
 {
 	SDL_ShowWindow(_window);
+	SWidget::show();
 }
 
 void SWindow::showMaximize()
@@ -146,8 +147,8 @@ SWindow* SWindow::instance()
 	return s_instance;
 }
 
-bool SWindow::event(SEvent* ev)
-{
-	SDL_Log("SWindow event\n");
-	return false;
-}
+//bool SWindow::event(SEvent* ev)
+//{
+//	SDL_Log("SWindow event\n");
+//	return false;
+//}
