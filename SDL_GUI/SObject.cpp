@@ -75,6 +75,20 @@ bool SObject::event(SEvent* ev)
 
 
 /*@ SWidget*/
+SWidget::SWidget(SObject* parent)
+	:SObject(parent)
+	, _rect(0, 0, 150, 25)
+{
+	std::cout << "SWidget init" << std::endl;
+
+	_rect = _parent ? SRect(0, 0, 100, 30) : SRect(0, 0, 300, 200);
+	_rSize = _rect.size();
+}
+SWidget::~SWidget()
+{
+	std::cout << "~SWidget destroy " << _title << std::endl;
+}
+
 void SWidget::show()
 {
 	_isHiden = false;
@@ -98,30 +112,33 @@ void SWidget::setWindowOpacity(float opacity)
 
 SRect SWidget::frameGeometry()const
 {
-	return SRect(_pos,_size);
+	return _rect;
 }
 
+SRect SWidget::rect() const
+{
+	return SRect(0,0,_rect.width(),_rect.height());
+}
 
 SPoint SWidget::windowPos()const
 {
-	return _pos;
+	return _rect.leftTop();
 }
 
 void SWidget::setWindowPos(int x, int y)
 {
-	_pos.x = x;
-	_pos.y = y;
+	_rect.moveLeftTop(SPoint(x, y));
 }
 
 SSize SWidget::windowSize()const
 {
-	return _size;
+	return _rect.size();
 }
 
 void SWidget::setWindowSize(int w, int h)
 {
-	_size.w = w;
-	_size.h = h;
+	_rect.setSize(w, h);
+	_rSize = SSize(w, h);
 }
 
 std::string SWidget::windowTitle()const
@@ -157,6 +174,71 @@ void SWidget::update()
 void SWidget::setBackgroundColor(SColor c)
 {
 	_bkColor = c;
+}
+
+SWidget* SWidget::parentWidget() const
+{
+	auto *w= dynamic_cast<SWidget*>(_parent);
+	return w;
+}
+
+SPoint SWidget::mapToGlobal(const SPoint& pos) const
+{
+	return SPoint();
+}
+
+SPoint SWidget::mapFromGlobal(const SPoint& pos) const
+{
+	return SPoint();
+}
+
+SPoint SWidget::mapToParent(const SPoint&pos) const
+{
+	return pos + _rect.leftTop();
+}
+
+SPoint SWidget::mapFromParent(const SPoint& pos) const
+{
+	return pos - _rect.leftTop();
+}
+
+SPoint SWidget::mapTo(const SWidget* parent, const SPoint& pos) const
+{
+	SPoint p(pos);
+	if (parent)
+	{
+		const SWidget* w = this;
+		while (w && w != parent)
+		{
+			p = w->mapToParent(p);
+			w = w->parentWidget();
+		}
+		if (!w)
+		{
+			throw "mapTo ：parent must be in parent hierarchy";
+		}
+	}
+	return p;
+}
+
+SPoint SWidget::mapFrom(const SWidget* parent, const SPoint& pos) const
+{
+	SPoint p(pos);
+	if (parent)
+	{
+		const SWidget* w = this;
+		while (w && w != parent)
+		{
+			p = w->mapFromParent(p);
+			w = w->parentWidget();
+		}
+		if (!w)
+		{
+			throw "mapFrom ：parent must be in parent hierarchy";
+		}
+	}
+
+	return p;
 }
 
 bool SWidget::event(SEvent* ev)
@@ -200,19 +282,43 @@ void SWidget::paintEvent()
 	 auto *renderer = SWindow::instance()->renderer();
 	 if (!renderer)
 		 return;
-	 
+	 SWidget* parentWidget = nullptr;
 	 SPoint leftTop;
+	 
 	 if (_parent)
 	 {
-		 auto widget = dynamic_cast<SWidget*>(_parent);
-		 if (widget)
-			 leftTop = widget->windowPos() +this->windowPos();
+		 parentWidget = dynamic_cast<SWidget*>(_parent);
+		 if (parentWidget)
+			 leftTop = parentWidget->mapTo(SWindow::instance(),SPoint(0,0)) + this->windowPos();
+	 
+
+		 if (parentWidget->rect().contains(frameGeometry(), true))
+		 {
+			 _rSize = rect().size();
+		 }
+		 else
+		 {
+			 SRect parentRect = SRect(SPoint(0,0),parentWidget->_rSize);
+			 SRect thisRect = this->frameGeometry();
+			 //左上角在父矩形内
+			 if (parentRect.contains(thisRect.leftTop()))
+			 {
+				 if (thisRect.rightBottom().x() > parentRect.rightBottom().x())
+				 {
+
+				 }
+				 SPoint tp = parentRect.rightBottom() - thisRect.leftTop();
+				 _rSize = SSize(tp.x(), tp.y());
+			 }	
+		 }
+
 	 }
 	 else
 	 {
 		 leftTop = this->windowPos();
 	 }
-	 const SDL_Rect& sdlRect = SRect(leftTop, this->windowSize()).sdlRect();
+
+	 const SDL_Rect& sdlRect = SRect(leftTop, _rSize).sdlRect();
 	 SDL_SetRenderDrawColor(renderer, _bkColor.red(), _bkColor.green(), _bkColor.blue(), _bkColor.alpha());
 	 SDL_RenderFillRect(renderer, &sdlRect);
 	 SDL_RenderPresent(renderer);
@@ -229,19 +335,6 @@ void SWidget::mouseReleaseEvent(SMouseEvent* ev)
 {
 	//SDL_Log("mouseReleaseEvent\n");
 }
-
-//250 250
-//0 0 500 500
-//20 20 400 400 ->
-
-SPoint SWidget::mapFromParent(const SPoint& point)
-{
-	if (_parent)
-		return SPoint(this->_pos.x - point.x, this->_pos.y - point.y);
-	else
-		return point;
-}
-
 
 std::ostream& operator<<(std::ostream& out, const SWidget& widget)
 {

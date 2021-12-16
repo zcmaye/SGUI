@@ -18,6 +18,7 @@ SWindow::SWindow(int w, int h)
 	SWidget::setWindowSize(_width, _height);
 	_winRenderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
 	s_instance = this;
+	
 }
 
 SWindow::~SWindow()

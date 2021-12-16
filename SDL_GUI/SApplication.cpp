@@ -36,21 +36,20 @@ SObject* findLastChild(SObject* obj, int x, int y)
 	for (auto child : obj->children())
 	{
 		auto* widget = dynamic_cast<SWidget*>(child);
-		
-		SPoint leftTop(0,0);
-		auto* parentWidget = dynamic_cast<SWidget*>(widget->parent());
-		if (parentWidget)
-		{
-			leftTop = parentWidget->windowPos();
-		}
-		if (widget && widget->frameGeometry().contains(x, y))
+		auto* parentWidget = dynamic_cast<SWidget*>(obj);
+		SPoint leftTop =widget->mapFrom(parentWidget, SPoint(x, y));
+
+		if (widget && widget->rect().contains(leftTop.x(), leftTop.y()))
 		{
 			if (!widget->children().empty())
-				returnObj = findLastChild(widget,x-leftTop.x, y-leftTop.y);
-			return widget;
+				returnObj = findLastChild(widget,leftTop.x(), leftTop.y());
+			if(returnObj == nullptr)
+				return widget;
+			else
+				return returnObj;
+
 		}
-		//SRect r = widget->frameGeometry();
-		//SDL_Log("%d %d %d %d\n", r.x1(), r.y1(), r.x2(), r.y2());			
+
 	}
 	return returnObj;
 }

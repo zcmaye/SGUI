@@ -2,7 +2,7 @@
 #include"SObject.h"
 #include"SApplication.h"
 #include"SWindow.h"
-#include<graphics.h>
+using namespace std;
 int main(int argc, char* argv[])
 {
 	SApplication a(argc, argv);
@@ -11,14 +11,15 @@ int main(int argc, char* argv[])
 	//w.setWindowOpacity(0.5);
 	w.show();
 
-	RGB(1, 1, 1);
 	SWidget* sw = new SWidget(&w);
 	sw->setWindowTitle("sw");
 	sw->setBackgroundColor(SColor::Red);
+	sw->setWindowPos(20, 20);
 	sw->setWindowSize(250, 250);
 	sw->show();
 
-	SWidget* sw1 = new SWidget(&w);
+
+	SWidget* sw1 = new SWidget(sw);
 	sw1->setWindowTitle("sw1");
 	sw1->setWindowPos(50,50);
 	sw1->setWindowSize(250, 250);
@@ -33,6 +34,12 @@ int main(int argc, char* argv[])
 	pw->show();
 	//delete sw;
 	std::cout << &w << " " << sw << " " << sw1 << " " << pw << std::endl;
+	//std::cout 
+	//	<< &w << " \n"
+	//	<< sw->mapToParent(SPoint(0,0))<<" "<< w.windowPos() << " \n"
+	//	<< sw1 << " \n" 
+	//	<< pw->mapTo(sw,SPoint(0,0)) << std::endl;
+
 
 	return a.exec();
 }

@@ -1,13 +1,20 @@
 ﻿#pragma once
 #include<SDL_rect.h>
 #include<iostream>
-struct SPoint
+class SPoint
 {
+public:
 	SPoint();
 	SPoint(int x, int y);
+	int x()const;
+	int y()const;
+
 	SPoint operator+(const SPoint& point) const;
-	int x;
-	int y;
+	SPoint operator-(const SPoint& point) const;
+	friend std::ostream& operator<<(std::ostream& out, const SPoint& point);
+private:
+	int _x;
+	int _y;
 };
 
 struct SSize
@@ -34,6 +41,26 @@ public:
 	inline int y1() { return _y1; }
 	inline int x2() { return _x2; }
 	inline int y2() { return _y2; }
+
+	SPoint leftTop() const;
+	SPoint leftBottom() const;
+	SPoint rightTop() const;
+	SPoint rightBottom() const;
+
+	 void moveLeft(Sint32 pos) noexcept;
+	 void moveTop(Sint32 pos) noexcept;
+	 void moveRight(Sint32 pos) noexcept;
+	 void moveBottom(Sint32 pos) noexcept;
+	//移动矩形，将指定位置移动到给定位置。 矩形的大小不变。  
+	void moveLeftTop(const SPoint& pos);
+	void moveLeftBottom(const SPoint& pos);
+	void moveRightTop(const SPoint& pos);
+	void moveRightBottom(const SPoint& pos);
+
+	SSize size() const;
+	void setSize(int width,int height);
+	int width()const;
+	int height()const;
 
 	inline SDL_Rect sdlRect()
 	{ 

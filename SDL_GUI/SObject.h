@@ -34,16 +34,8 @@ private:
 
 struct SWidget:public SObject
 {
-	SWidget(SObject* parent = nullptr)
-		:SObject(parent) 
-		,_size(150,25)
-	{
-		std::cout << "SWidget init" << std::endl;
-	}
-	virtual ~SWidget()
-	{
-		std::cout << "~SWidget destroy "<< _title << std::endl;
-	}
+	SWidget(SObject* parent = nullptr);
+	virtual ~SWidget();
 
 	//获取窗口坐标
 	SPoint windowPos()const;
@@ -68,14 +60,21 @@ struct SWidget:public SObject
 	void setWindowOpacity(float opacity);
 	//获取窗口几何区域
 	SRect frameGeometry()const;
+	SRect rect()const;
 
 	//更新窗口
 	void  update();
 	//设置颜色
 	void setBackgroundColor(SColor c = SColor::White);
 
+	SWidget* parentWidget()const;
 
-	SPoint mapFromParent(const SPoint& point);		//把父对象的坐标转为本对象的坐标
+	SPoint mapToGlobal(const SPoint&) const;
+	SPoint mapFromGlobal(const SPoint&) const;
+	SPoint mapToParent(const SPoint&) const;
+	SPoint mapFromParent(const SPoint&) const;
+	SPoint mapTo(const SWidget*, const SPoint&) const;
+	SPoint mapFrom(const SWidget*, const SPoint&) const;
 public:
 	friend std::ostream& operator<<(std::ostream& out, const SWidget& widget);
 	friend std::ostream& operator<<(std::ostream& out, const SWidget*const widget);
@@ -86,8 +85,8 @@ protected:
 	virtual void mouseReleaseEvent(SMouseEvent* ev);
 private:
 	std::string _title;
-	SPoint		_pos;
-	SSize		_size;
+	SRect		_rect;
+	SSize		_rSize;	//实际绘制大小
 	SSurface*	_icon;
 	float		_opacity;
 
