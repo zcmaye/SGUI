@@ -82,7 +82,6 @@ SWidget::SWidget(SObject* parent)
 {
 	std::cout << "SWidget init" << std::endl;
 
-	_rect = _parent ? SRect(0, 0, 100, 30) : SRect(0, 0, 300, 200);
 	_rSize = _rect.size();
 }
 SWidget::~SWidget()
@@ -93,7 +92,7 @@ SWidget::~SWidget()
 void SWidget::show()
 {
 	_isHiden = false;
-	update();
+	//update();
 }
 
 void SWidget::raise()
@@ -129,7 +128,7 @@ SPoint SWidget::windowPos()const
 void SWidget::setWindowPos(int x, int y)
 {
 	_rect.moveLeftTop(SPoint(x, y));
-	update();
+	//update();
 }
 
 void SWidget::setWindowPos(const SPoint& pos)
@@ -146,7 +145,8 @@ void SWidget::move(int x, int y)
 void SWidget::move(const SPoint& pos)
 {
 	_rect.moveLeftTop(pos);
-	update();
+	_rSize = _rect.size();
+	//update();
 }
 
 SSize SWidget::windowSize()const
@@ -265,7 +265,15 @@ bool SWidget::event(SEvent* ev)
 	switch (ev->type())
 	{
 	case SEvent::Paint:
+	{
+		//绘制自己
 		paintEvent();
+		//孩子也重绘
+		for (auto child : children())
+		{
+			child->event(new SEvent(ev->type()));
+		}
+	}
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 		mousePressEvent((SMouseEvent*)ev);
@@ -348,7 +356,7 @@ void SWidget::paintEvent()
 	 const SDL_Rect& sdlRect = SRect(leftTop, _rSize).sdlRect();
 	 SDL_SetRenderDrawColor(renderer, _bkColor.red(), _bkColor.green(), _bkColor.blue(), _bkColor.alpha());
 	 SDL_RenderFillRect(renderer, &sdlRect);
-	 SDL_RenderPresent(renderer);
+
 	 //SDL_Log("paintEvent\n");
 }
 
@@ -356,6 +364,7 @@ void SWidget::mousePressEvent(SMouseEvent* ev)
 {
 	m_isPress = true;
 	m_begPos = ev->pos();
+	std::clog << "press" << ev->pos()<<" "<<frameGeometry() << std::endl;
 	//SDL_Log("mousePressEvent\n");
 	//ev->ignore();
 }
@@ -363,16 +372,27 @@ void SWidget::mousePressEvent(SMouseEvent* ev)
 void SWidget::mouseReleaseEvent(SMouseEvent* ev)
 {
 	m_isPress = false;
+	std::clog << "release" << ev->pos() << std::endl;
 	//SDL_Log("mouseReleaseEvent\n");
 }
 
 void SWidget::mouseMoveEvent(SMouseEvent* ev)
 {
+	std::clog << "mouse" << *this << endl; ;
+	for (auto c : children())
+	{
+		auto w =dynamic_cast<SWidget*>(c);
+		std::cout << w << std::endl;
+	}
+	
+	//std::clog << "move" << ev->pos() << std::endl;
 	if (m_isPress)
 	{
-		std::clog << m_begPos <<"  " <<ev->pos()<< m_begPos - ev->pos() <<" "<<windowPos()  << std::endl;
-		move(ev->pos() );
-		std::clog << windowPos() << std::endl;
+		//std::clog << m_begPos <<"  " <<ev->pos()<< ev->pos() - m_begPos  <<" "<<windowPos()  << std::endl;
+		auto t = ev->pos() - m_begPos;
+		//SDL_RenderClear(SWindow::instance()->renderer());
+		move(ev->globalPos() - m_begPos);
+		std::clog <<frameGeometry()<<" "<< t << std::endl;
 	}
 }
 

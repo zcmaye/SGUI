@@ -19,14 +19,14 @@ int main(int argc, char* argv[])
 	sw->show();
 
 
-	/*SWidget* sw1 = new SWidget(sw);
+	SWidget* sw1 = new SWidget(sw);
 	sw1->setWindowTitle("sw1");
 	sw1->setWindowPos(50,50);
 	sw1->setWindowSize(250, 250);
 	sw1->setBackgroundColor(SColor::Green);
 	sw1->show();
 
-	SWidget* pw = new SWidget(sw1);
+	/*SWidget* pw = new SWidget(sw1);
 	pw->setWindowTitle("pw");
 	pw->setWindowPos(-10, -10);
 	pw->setWindowSize(50, 60);

@@ -47,6 +47,7 @@ public:
 	static SWindow* instance();
 protected:
 	//bool event(SEvent* ev)override;
+	//void paintEvent()override;
 private:
 	int _width;
 	int _height;

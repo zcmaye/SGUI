@@ -126,7 +126,9 @@ bool SApplication::handingEvent()
 		default:
 			break;
 		}
-		//SDL_Log("%p\n", g_rootObj);
+		//重绘所以有控件
+		notify(root, new SMouseEvent(SDL_EventType(SEvent::Paint), SPoint(), SPoint()));
+		SDL_RenderPresent(SWindow::instance()->renderer());;
 	}
 	return false;
 }

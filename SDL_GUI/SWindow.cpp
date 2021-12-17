@@ -150,6 +150,13 @@ SWindow* SWindow::instance()
 	return s_instance;
 }
 
+//void SWindow::paintEvent()
+//{
+//	SDL_SetRenderDrawColor(renderer(), 255, 255, 255, 255);
+//	SDL_RenderClear(renderer());
+//	SDL_RenderPresent(renderer());
+//}
+
 //bool SWindow::event(SEvent* ev)
 //{
 //	SDL_Log("SWindow event\n");

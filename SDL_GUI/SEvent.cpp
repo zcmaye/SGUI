@@ -8,7 +8,7 @@ SEvent::SEvent(int type)
 
 SEvent::~SEvent()
 {
-	std::cout << "~SEvent "<<type() << std::endl;
+	//std::cout << "~SEvent "<<type() << std::endl;
 }
 
 int SEvent::type()
