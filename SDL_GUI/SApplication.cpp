@@ -67,41 +67,62 @@ bool SApplication::handingEvent()
 			return true;
 		case SDL_MOUSEBUTTONDOWN:
 		{
-			SEvent* mouseEv = new SMouseEvent(SDL_MOUSEBUTTONDOWN, SPoint(ev.button.x, ev.button.y));
+			//SEvent* mouseEv = new SMouseEvent(SDL_MOUSEBUTTONDOWN, SPoint(ev.button.x, ev.button.y));
 			//SApplication::eventQueue.insert(new SMouseEvent(SDL_MOUSEBUTTONDOWN, SPoint(ev.button.x, ev.button.y)));
 			//SDL_Log("mousepos %d %d\n", ev.button.x, ev.button.y);
+			SPoint globalPos = SPoint(ev.button.x, ev.button.y);
 			//鼠标事件是否在孩子上
-			auto* widget = findLastChild(root, ev.button.x, ev.button.y);
+			auto* widget = dynamic_cast<SWidget*>(findLastChild(root, ev.button.x, ev.button.y));
 			if (widget)
 			{
-				std::clog << ((SWidget*)widget) << std::endl;
-				notify(widget, mouseEv);
+				//std::clog << ((SWidget*)widget) << std::endl;
+				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));
+				notify(widget, new SMouseEvent(SDL_MOUSEBUTTONDOWN, localPos,globalPos));
 			}
 			//没有在任何孩子身上，就传给主窗口
 			else
 			{
-				notify(root, mouseEv);
+				notify(root, new SMouseEvent(SDL_MOUSEBUTTONDOWN, globalPos, globalPos));
 			}
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
 		{
 			//SApplication::eventQueue.insert(new SMouseEvent(SDL_MOUSEBUTTONUP, SPoint(ev.button.x, ev.button.y)));
-			SEvent* mouseEv = new SMouseEvent(SDL_MOUSEBUTTONUP, SPoint(ev.button.x, ev.button.y));
+			//SEvent* mouseEv = new SMouseEvent(SDL_MOUSEBUTTONUP, SPoint(ev.button.x, ev.button.y));
+			SPoint globalPos = SPoint(ev.button.x, ev.button.y);
 			//鼠标事件是否在孩子上
-			auto* widget = findLastChild(root, ev.button.x, ev.button.y);
+			auto* widget = dynamic_cast<SWidget*>( findLastChild(root, ev.button.x, ev.button.y));
 			if (widget)
 			{
-				notify(widget, mouseEv);
+				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));		
+				notify(widget, new SMouseEvent(SDL_MOUSEBUTTONUP, localPos,globalPos));
 			}
 			//没有在任何孩子身上，就传给主窗口
 			else
 			{
-				notify(root, mouseEv);
+				notify(root, new SMouseEvent(SDL_MOUSEBUTTONUP, globalPos, globalPos));
 			}
 			break;
 		}
-		break;
+		case SDL_MOUSEMOTION:	//鼠标移动
+		{
+			//SEvent* mouseEv = new SMouseEvent(SDL_MOUSEMOTION, SPoint(ev.motion.x, ev.motion.y));
+			SPoint globalPos = SPoint(ev.button.x, ev.button.y);
+			//鼠标事件是否在孩子上
+			auto* widget = dynamic_cast<SWidget*>( findLastChild(root, ev.motion.x, ev.motion.y));
+			if (widget)
+			{
+				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));
+				notify(widget, new SMouseEvent(SDL_MOUSEMOTION, localPos, globalPos));
+			}
+			//没有在任何孩子身上，就传给主窗口
+			else
+			{
+				notify(root, new SMouseEvent(SDL_MOUSEMOTION, globalPos, globalPos));
+			}
+			break;
+		}
 		default:
 			break;
 		}

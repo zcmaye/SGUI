@@ -43,9 +43,10 @@ std::ostream& operator<<(std::ostream& out, const SEvent* const ev)
 }
 
 /*@ 鼠标事件*/
-SMouseEvent::SMouseEvent(SDL_EventType type, const SPoint& localPos)
+SMouseEvent::SMouseEvent(SDL_EventType type, const SPoint& localPos, const SPoint& globalPos)
 	:SEvent(type)
 	, _pos(localPos)
+	,_globalPos(globalPos)
 {
 }
 
@@ -56,4 +57,9 @@ SMouseEvent::~SMouseEvent()
 SPoint SMouseEvent::pos()
 {
 	return _pos;
+}
+
+SPoint SMouseEvent::globalPos()
+{
+	return _globalPos;
 }

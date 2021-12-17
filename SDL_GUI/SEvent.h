@@ -32,9 +32,11 @@ private:
 class SMouseEvent:public  SEvent
 {
 public:
-	SMouseEvent(SDL_EventType type, const SPoint& localPos);
+	SMouseEvent(SDL_EventType type, const SPoint& localPos, const SPoint& globalPos);
 	~SMouseEvent();
 	SPoint pos();
+	SPoint globalPos();
 private:
-	SPoint _pos;
+	SPoint _pos;			//相对于接受事件的控件的坐标
+	SPoint _globalPos;		//全局坐标
 };

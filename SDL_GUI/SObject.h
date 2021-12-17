@@ -40,6 +40,9 @@ struct SWidget:public SObject
 	//获取窗口坐标
 	SPoint windowPos()const;
 	void setWindowPos(int x, int y);
+	void setWindowPos(const SPoint&pos);
+	void move(int x, int y);
+	void move(const SPoint& pos);
 	//获取窗口大小
 	SSize windowSize()const;
 	void setWindowSize(int w, int h);
@@ -83,6 +86,7 @@ protected:
 	virtual void paintEvent();
 	virtual void mousePressEvent(SMouseEvent*ev);
 	virtual void mouseReleaseEvent(SMouseEvent* ev);
+	virtual void mouseMoveEvent(SMouseEvent* ev);
 private:
 	std::string _title;
 	SRect		_rect;
@@ -95,4 +99,6 @@ private:
 
 	SColor		_bkColor;	//背景颜色
 
+	bool		m_isPress;	//鼠标左键是否按下
+	SPoint		m_begPos;
 };

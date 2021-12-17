@@ -78,6 +78,7 @@ bool SObject::event(SEvent* ev)
 SWidget::SWidget(SObject* parent)
 	:SObject(parent)
 	, _rect(0, 0, 150, 25)
+	, m_isPress(false)
 {
 	std::cout << "SWidget init" << std::endl;
 
@@ -128,6 +129,24 @@ SPoint SWidget::windowPos()const
 void SWidget::setWindowPos(int x, int y)
 {
 	_rect.moveLeftTop(SPoint(x, y));
+	update();
+}
+
+void SWidget::setWindowPos(const SPoint& pos)
+{
+	setWindowPos(pos.x(), pos.y());
+}
+
+void SWidget::move(int x, int y)
+{
+	move(SPoint(x, y));
+	
+}
+
+void SWidget::move(const SPoint& pos)
+{
+	_rect.moveLeftTop(pos);
+	update();
 }
 
 SSize SWidget::windowSize()const
@@ -254,6 +273,9 @@ bool SWidget::event(SEvent* ev)
 	case SDL_MOUSEBUTTONUP:
 		mouseReleaseEvent((SMouseEvent*)ev);
 		break;
+	case SDL_MOUSEMOTION:
+		mouseMoveEvent((SMouseEvent*)ev);
+		break;
 	default:
 		break;
 	}
@@ -282,6 +304,8 @@ void SWidget::paintEvent()
 	 auto *renderer = SWindow::instance()->renderer();
 	 if (!renderer)
 		 return;
+
+
 	 SWidget* parentWidget = nullptr;
 	 SPoint leftTop;
 	 
@@ -289,7 +313,10 @@ void SWidget::paintEvent()
 	 {
 		 parentWidget = dynamic_cast<SWidget*>(_parent);
 		 if (parentWidget)
-			 leftTop = parentWidget->mapTo(SWindow::instance(),SPoint(0,0)) + this->windowPos();
+		 {
+			// parentWidget->paintEvent();
+			 leftTop = parentWidget->mapTo(SWindow::instance(), SPoint(0, 0)) + this->windowPos();
+		 }
 	 
 
 		 if (parentWidget->rect().contains(frameGeometry(), true))
@@ -327,13 +354,26 @@ void SWidget::paintEvent()
 
 void SWidget::mousePressEvent(SMouseEvent* ev)
 {
+	m_isPress = true;
+	m_begPos = ev->pos();
 	//SDL_Log("mousePressEvent\n");
 	//ev->ignore();
 }
 
 void SWidget::mouseReleaseEvent(SMouseEvent* ev)
 {
+	m_isPress = false;
 	//SDL_Log("mouseReleaseEvent\n");
+}
+
+void SWidget::mouseMoveEvent(SMouseEvent* ev)
+{
+	if (m_isPress)
+	{
+		std::clog << m_begPos <<"  " <<ev->pos()<< m_begPos - ev->pos() <<" "<<windowPos()  << std::endl;
+		move(ev->pos() );
+		std::clog << windowPos() << std::endl;
+	}
 }
 
 std::ostream& operator<<(std::ostream& out, const SWidget& widget)
