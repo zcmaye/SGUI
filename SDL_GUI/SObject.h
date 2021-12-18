@@ -87,6 +87,8 @@ protected:
 	virtual void mousePressEvent(SMouseEvent*ev);
 	virtual void mouseReleaseEvent(SMouseEvent* ev);
 	virtual void mouseMoveEvent(SMouseEvent* ev);
+	virtual void enterEvent(SEvent* ev);
+	virtual void leaveEvent(SEvent* ev);
 private:
 	std::string _title;
 	SRect		_rect;

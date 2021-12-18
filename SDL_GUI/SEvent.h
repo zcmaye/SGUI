@@ -3,6 +3,10 @@
 #include"SGeometry.h"
 #include<iostream>
 class SPoint;
+class SEvent;
+class SObject;
+
+
 
 class SEvent
 {
@@ -10,6 +14,8 @@ public:
 	enum Type
 	{
 		Paint = SDL_USEREVENT,	//绘图事件
+		Enter,	
+		Leave,
 	};
 public:
 	SEvent(int type);

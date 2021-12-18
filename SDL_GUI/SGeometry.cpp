@@ -20,6 +20,16 @@ SPoint SPoint::operator-(const SPoint& point) const
 	return SPoint(this->_x - point._x, this->_y - point._y);;
 }
 
+bool SPoint::operator!=(const SPoint& point) const
+{
+	return (this->x() != point.x() || this->y() != point.y());
+}
+
+bool SPoint::operator==(const SPoint& point) const
+{
+	return (this->x() == point.x() && this->y() == point.y());
+}
+
 int SPoint::x()const
 {
 	return _x;
@@ -188,6 +198,6 @@ void SRect::moveRightBottom(const SPoint& pos)
 
 std::ostream& operator<<(std::ostream& out, const SRect& rect)
 {
-	out << "SRect(" << rect._x1 << "," << rect._y1 << "," << rect._x2 << "," << rect._y2;
+	out << "SRect(" << rect._x1 << "," << rect._y1 << "," << rect._x2- rect._x1 << "," << rect._y2-rect._y1<<") ";
 	return out;
 }

@@ -1,5 +1,5 @@
 ﻿#include "SWindow.h"
-
+#include "SEvent.h"
 static SWindow* s_instance = nullptr;
 
 SWindow::SWindow(int w, int h)
@@ -150,15 +150,22 @@ SWindow* SWindow::instance()
 	return s_instance;
 }
 
-//void SWindow::paintEvent()
-//{
-//	SDL_SetRenderDrawColor(renderer(), 255, 255, 255, 255);
-//	SDL_RenderClear(renderer());
-//	SDL_RenderPresent(renderer());
-//}
+void SWindow::mousePressEvent(SMouseEvent* ev)
+{
+}
 
-//bool SWindow::event(SEvent* ev)
-//{
-//	SDL_Log("SWindow event\n");
-//	return false;
-//}
+void SWindow::mouseReleaseEvent(SMouseEvent* ev)
+{
+
+}
+
+//不能让窗口移动，否则会出错
+void SWindow::mouseMoveEvent(SMouseEvent* ev)
+{
+	
+}
+
+void SWindow::paintEvent()
+{
+	SWidget::paintEvent();
+}

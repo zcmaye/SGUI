@@ -284,6 +284,12 @@ bool SWidget::event(SEvent* ev)
 	case SDL_MOUSEMOTION:
 		mouseMoveEvent((SMouseEvent*)ev);
 		break;
+	case SEvent::Enter:
+		enterEvent(ev);
+		break;
+	case SEvent::Leave:
+		leaveEvent(ev);
+		break;
 	default:
 		break;
 	}
@@ -372,28 +378,29 @@ void SWidget::mousePressEvent(SMouseEvent* ev)
 void SWidget::mouseReleaseEvent(SMouseEvent* ev)
 {
 	m_isPress = false;
+	m_begPos = SPoint();
 	std::clog << "release" << ev->pos() << std::endl;
 	//SDL_Log("mouseReleaseEvent\n");
 }
 
 void SWidget::mouseMoveEvent(SMouseEvent* ev)
 {
-	std::clog << "mouse" << *this << endl; ;
-	for (auto c : children())
+	if (m_isPress && m_begPos != SPoint(0,0))
 	{
-		auto w =dynamic_cast<SWidget*>(c);
-		std::cout << w << std::endl;
-	}
-	
-	//std::clog << "move" << ev->pos() << std::endl;
-	if (m_isPress)
-	{
-		//std::clog << m_begPos <<"  " <<ev->pos()<< ev->pos() - m_begPos  <<" "<<windowPos()  << std::endl;
 		auto t = ev->pos() - m_begPos;
-		//SDL_RenderClear(SWindow::instance()->renderer());
-		move(ev->globalPos() - m_begPos);
-		std::clog <<frameGeometry()<<" "<< t << std::endl;
+		move(mapToParent(ev->pos()) - m_begPos);
+		std::clog << "mouse move" << *this << "" << m_begPos<< ev->pos() << std::endl; ;
 	}
+}
+
+void SWidget::enterEvent(SEvent* ev)
+{
+	std::clog << "enterEvent" << std::endl;
+}
+
+void SWidget::leaveEvent(SEvent* ev)
+{
+	std::clog << "leaveEvent" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& out, const SWidget& widget)

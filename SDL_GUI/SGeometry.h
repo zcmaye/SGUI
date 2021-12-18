@@ -11,6 +11,8 @@ public:
 
 	SPoint operator+(const SPoint& point) const;
 	SPoint operator-(const SPoint& point) const;
+	bool operator!=(const SPoint& point) const;
+	bool operator==(const SPoint& point) const;
 	friend std::ostream& operator<<(std::ostream& out, const SPoint& point);
 private:
 	int _x;

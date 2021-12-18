@@ -46,8 +46,10 @@ public:
 	operator SDL_Renderer* ();
 	static SWindow* instance();
 protected:
-	//bool event(SEvent* ev)override;
-	//void paintEvent()override;
+	void mousePressEvent(SMouseEvent* ev)override;
+	void mouseReleaseEvent(SMouseEvent* ev)override;
+	void mouseMoveEvent(SMouseEvent* ev)override;
+	void paintEvent()override;
 private:
 	int _width;
 	int _height;
