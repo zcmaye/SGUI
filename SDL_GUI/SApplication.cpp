@@ -131,12 +131,18 @@ bool SApplication::handingEvent()
 
 			break;
 		}
+		case SDL_SYSWMEVENT:
+			std::clog << "SDL_SYSWMEVENT" << std::endl;
+			break;
+		case SDL_WINDOWEVENT:
+			std::clog << "SDL_WINDOWEVENT"<<ev.syswm.msg << std::endl;
+			break;
 		default:
 			break;
 		}
 		//重绘所有控件
-		notify(root, new SMouseEvent(SDL_EventType(SEvent::Paint), SPoint(), SPoint()));
-		SDL_RenderPresent(SWindow::instance()->renderer());
+		auto postEvent = SPostEvent(root, new SEvent(SDL_EventType(SEvent::Paint)));
+		SApplication::postEventQue.push(postEvent);
 	}
 
 	while (!SApplication::postEventQue.empty())

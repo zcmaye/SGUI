@@ -82,7 +82,6 @@ SWidget::SWidget(SObject* parent)
 {
 	std::cout << "SWidget init" << std::endl;
 
-	_rSize = _rect.size();
 }
 SWidget::~SWidget()
 {
@@ -145,7 +144,6 @@ void SWidget::move(int x, int y)
 void SWidget::move(const SPoint& pos)
 {
 	_rect.moveLeftTop(pos);
-	_rSize = _rect.size();
 	//update();
 }
 
@@ -157,7 +155,6 @@ SSize SWidget::windowSize()const
 void SWidget::setWindowSize(int w, int h)
 {
 	_rect.setSize(w, h);
-	_rSize = SSize(w, h);
 }
 
 std::string SWidget::windowTitle()const
@@ -273,6 +270,7 @@ bool SWidget::event(SEvent* ev)
 		{
 			child->event(new SEvent(ev->type()));
 		}
+		SDL_RenderPresent(SWindow::instance()->renderer());
 	}
 		break;
 	case SDL_MOUSEBUTTONDOWN:
@@ -318,52 +316,24 @@ void SWidget::paintEvent()
 	 auto *renderer = SWindow::instance()->renderer();
 	 if (!renderer)
 		 return;
-
-
-	 SWidget* parentWidget = nullptr;
-	 SPoint leftTop;
-	 
+ 
+	 //计算在父对象中实际应该绘制的矩形区域
+	 SRect irect(frameGeometry());
 	 if (_parent)
 	 {
-		 parentWidget = dynamic_cast<SWidget*>(_parent);
+		 SWidget*  parentWidget = this->parentWidget();
 		 if (parentWidget)
 		 {
-			// parentWidget->paintEvent();
-			 leftTop = parentWidget->mapTo(SWindow::instance(), SPoint(0, 0)) + this->windowPos();
+			 //父子对象相交矩形
+			 irect = parentWidget->rect().intersected(this->frameGeometry());	
+			 //把自己左上角相对于父对象的坐标转为相对于SWindow的全局坐标
+			 irect.moveLeftTop(parentWidget->mapTo(SWindow::instance(), irect.leftTop()));
 		 }
-	 
-
-		 if (parentWidget->rect().contains(frameGeometry(), true))
-		 {
-			 _rSize = rect().size();
-		 }
-		 else
-		 {
-			 SRect parentRect = SRect(SPoint(0,0),parentWidget->_rSize);
-			 SRect thisRect = this->frameGeometry();
-			 //左上角在父矩形内
-			 if (parentRect.contains(thisRect.leftTop()))
-			 {
-				 if (thisRect.rightBottom().x() > parentRect.rightBottom().x())
-				 {
-
-				 }
-				 SPoint tp = parentRect.rightBottom() - thisRect.leftTop();
-				 _rSize = SSize(tp.x(), tp.y());
-			 }	
-		 }
-
-	 }
-	 else
-	 {
-		 leftTop = this->windowPos();
 	 }
 
-	 const SDL_Rect& sdlRect = SRect(leftTop, _rSize).sdlRect();
+	 const SDL_Rect& sdlRect = irect.sdlRect();
 	 SDL_SetRenderDrawColor(renderer, _bkColor.red(), _bkColor.green(), _bkColor.blue(), _bkColor.alpha());
 	 SDL_RenderFillRect(renderer, &sdlRect);
-
-	 //SDL_Log("paintEvent\n");
 }
 
 void SWidget::mousePressEvent(SMouseEvent* ev)

@@ -49,6 +49,7 @@ public:
 	SPoint rightTop() const;
 	SPoint rightBottom() const;
 
+
 	 void moveLeft(Sint32 pos) noexcept;
 	 void moveTop(Sint32 pos) noexcept;
 	 void moveRight(Sint32 pos) noexcept;
@@ -58,6 +59,9 @@ public:
 	void moveLeftBottom(const SPoint& pos);
 	void moveRightTop(const SPoint& pos);
 	void moveRightBottom(const SPoint& pos);
+
+	//两个矩形相交部分
+	SRect intersected(const SRect& rectangle) const;
 
 	SSize size() const;
 	void setSize(int width,int height);

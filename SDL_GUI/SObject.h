@@ -92,7 +92,6 @@ protected:
 private:
 	std::string _title;
 	SRect		_rect;
-	SSize		_rSize;	//实际绘制大小
 	SSurface*	_icon;
 	float		_opacity;
 

@@ -1,5 +1,5 @@
 ﻿#include "SGeometry.h"
-
+#include<cmath>
 SPoint::SPoint()
 	:_x(0), _y(0)
 {
@@ -122,6 +122,30 @@ SPoint SRect::rightTop() const
 SPoint SRect::rightBottom() const
 {
 	return SPoint(_x2,_y2);
+}
+
+
+SRect SRect::intersected(const SRect& rect) const
+{
+	//一个矩形的左上角x大于另一个矩形的右下角x，不相交 （左右判断）
+	if (_x1 > rect._x2 || _x2 < rect._x1)
+	{
+		return SRect();
+	}
+
+	//一个矩形的左上角y大于另一个矩形的右下角y，不相交 （上下判断）
+	if (_y1 > rect._y2 || _y2 < rect._y1)
+	{
+		return SRect();
+	}
+
+	//否则相交
+	SRect tmp;
+	tmp._x1 = std::max(_x1,rect._x1);
+	tmp._x2 = std::min(_x2,rect._x2);
+	tmp._y1 = std::max(_y1,rect._y1);
+	tmp._y2 = std::min(_y2,rect._y2);
+	return tmp;
 }
 
 SSize SRect::size() const
