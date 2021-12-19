@@ -6,6 +6,17 @@ class SPoint;
 class SEvent;
 class SObject;
 
+namespace SGUI
+{
+	enum MouseButton
+	{
+		NoButton = 0x00000000,
+		LeftButton=0x00000001,
+		RightButton=0x00000002,
+		MidButton = 0x00000004
+	};
+	using MouseButtons = enum MouseButton ;
+}
 
 
 class SEvent
@@ -39,10 +50,20 @@ class SMouseEvent:public  SEvent
 {
 public:
 	SMouseEvent(SDL_EventType type, const SPoint& localPos, const SPoint& globalPos);
+	SMouseEvent(SDL_EventType type, const SPoint& localPos, const SPoint& globalPos,SGUI::MouseButton button, SGUI::MouseButtons buttons);
 	~SMouseEvent();
 	SPoint pos();
 	SPoint globalPos();
+
+	inline SGUI::MouseButton button() const { return m_button; }
+	inline SGUI::MouseButtons buttons() const { return m_mouseState; }
+
 private:
 	SPoint _pos;			//相对于接受事件的控件的坐标
 	SPoint _globalPos;		//全局坐标
+
+	SGUI::MouseButton m_button  = SGUI::NoButton;
+	SGUI::MouseButtons m_mouseState = SGUI::NoButton;
+
+	static SGUI::MouseButton getButton(int button);	//更具sdl的鼠标按键获取自定义的按键事件
 };

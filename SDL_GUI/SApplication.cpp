@@ -86,29 +86,29 @@ bool SApplication::handingEvent()
 			if (widget)
 			{
 				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));
-				SApplication::postEventQue.push(SPostEvent(widget, new SMouseEvent(SDL_MOUSEBUTTONDOWN, localPos, globalPos)));
+				SApplication::postEventQue.push(SPostEvent(widget, new SMouseEvent(SDL_EventType(ev.type), localPos, globalPos,SGUI::MouseButton(ev.button.button),SGUI::NoButton)));
 			}
 			//没有在任何孩子身上，就传给主窗口
 			else
 			{
-				SApplication::postEventQue.push(SPostEvent(root, new SMouseEvent(SDL_MOUSEBUTTONDOWN, globalPos, globalPos)));
+				SApplication::postEventQue.push(SPostEvent(root, new SMouseEvent(SDL_EventType(ev.type), globalPos, globalPos)));
 			}
 			break;
 		}
 		case SDL_MOUSEBUTTONUP:
 		{
-			SPoint globalPos = SPoint(ev.button.x, ev.button.y);
 			//鼠标事件是否在孩子上
-			auto* widget = dynamic_cast<SWidget*>( findLastChild(root, ev.button.x, ev.button.y));
+			auto* widget = dynamic_cast<SWidget*>(findLastChild(root, ev.button.x, ev.button.y));
+			SPoint globalPos = SPoint(ev.button.x, ev.button.y);
 			if (widget)
 			{
-				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));		
-				SApplication::postEventQue.push(SPostEvent(widget, new SMouseEvent(SDL_MOUSEBUTTONUP, localPos, globalPos)));
+				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));
+				SApplication::postEventQue.push(SPostEvent(widget, new SMouseEvent(SDL_EventType(ev.type), localPos, globalPos)));
 			}
 			//没有在任何孩子身上，就传给主窗口
 			else
 			{
-				SApplication::postEventQue.push(SPostEvent(root, new SMouseEvent(SDL_MOUSEBUTTONUP, globalPos, globalPos)));
+				SApplication::postEventQue.push(SPostEvent(root, new SMouseEvent(SDL_EventType(ev.type), globalPos, globalPos)));
 			}
 			break;
 		}

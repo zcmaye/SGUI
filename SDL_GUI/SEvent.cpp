@@ -46,8 +46,19 @@ std::ostream& operator<<(std::ostream& out, const SEvent* const ev)
 SMouseEvent::SMouseEvent(SDL_EventType type, const SPoint& localPos, const SPoint& globalPos)
 	:SEvent(type)
 	, _pos(localPos)
-	,_globalPos(globalPos)
+	, _globalPos(globalPos)
 {
+
+}
+
+SMouseEvent::SMouseEvent(SDL_EventType type, const SPoint& localPos, const SPoint& globalPos, SGUI::MouseButton button, SGUI::MouseButtons buttons)
+	:SEvent(type)
+	, _pos(localPos)
+	, _globalPos(globalPos)
+	,m_button(button)
+	, m_mouseState(buttons)
+{
+
 }
 
 SMouseEvent::~SMouseEvent()
@@ -62,4 +73,21 @@ SPoint SMouseEvent::pos()
 SPoint SMouseEvent::globalPos()
 {
 	return _globalPos;
+}
+
+
+
+SGUI::MouseButton SMouseEvent::getButton(int button)
+{
+	switch (button)
+	{
+	case SDL_BUTTON_LEFT:
+		return SGUI::MouseButton::LeftButton;
+	case SDL_BUTTON_RIGHT:
+		return SGUI::MouseButton::RightButton;
+	case SDL_BUTTON_MIDDLE:
+		return SGUI::MouseButton::MidButton;
+	default:
+		return SGUI::MouseButton::NoButton;
+	}
 }

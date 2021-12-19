@@ -340,8 +340,8 @@ void SWidget::mousePressEvent(SMouseEvent* ev)
 {
 	m_isPress = true;
 	m_begPos = ev->pos();
-	std::clog << "press" << ev->pos()<<" "<<frameGeometry() << std::endl;
-	//SDL_Log("mousePressEvent\n");
+	std::clog << "press" << ev->button()<<" "<<ev->buttons() << std::endl;
+	SDL_Log("mousePressEvent\n");
 	//ev->ignore();
 }
 
@@ -350,7 +350,7 @@ void SWidget::mouseReleaseEvent(SMouseEvent* ev)
 	m_isPress = false;
 	m_begPos = SPoint();
 	std::clog << "release" << ev->pos() << std::endl;
-	//SDL_Log("mouseReleaseEvent\n");
+	SDL_Log("mouseReleaseEvent\n");
 }
 
 void SWidget::mouseMoveEvent(SMouseEvent* ev)
@@ -359,7 +359,7 @@ void SWidget::mouseMoveEvent(SMouseEvent* ev)
 	{
 		auto t = ev->pos() - m_begPos;
 		move(mapToParent(ev->pos()) - m_begPos);
-		std::clog << "mouse move" << *this << "" << m_begPos<< ev->pos() << std::endl; ;
+		//std::clog << "mouse move" << *this << "" << m_begPos<< ev->pos() << std::endl; ;
 	}
 }
 
