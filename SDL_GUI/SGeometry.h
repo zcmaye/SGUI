@@ -73,7 +73,8 @@ public:
 		return SDL_Rect{ _x1,_y1, _x2 - _x1,_y2 - _y1 }; 
 	}
 	friend std::ostream& operator<<(std::ostream& out, const SRect& rect);
-
+	bool operator==(const SRect& rect)const;
+	bool operator!=(const SRect& rect)const;
 private:
 	int _x1;
 	int _y1;

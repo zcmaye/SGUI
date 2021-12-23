@@ -92,6 +92,7 @@ void SWidget::show()
 {
 	_isHiden = false;
 	//update();
+	_rrect = _rect;
 }
 
 void SWidget::raise()
@@ -328,8 +329,12 @@ void SWidget::paintEvent()
 			 irect = parentWidget->rect().intersected(this->frameGeometry());	
 			 //把自己左上角相对于父对象的坐标转为相对于SWindow的全局坐标
 			 irect.moveLeftTop(parentWidget->mapTo(SWindow::instance(), irect.leftTop()));
-		 }
+			 std::clog <<"_rrect" << _rrect << std::endl;
+		}
 	 }
+	
+
+	
 
 	 const SDL_Rect& sdlRect = irect.sdlRect();
 	 SDL_SetRenderDrawColor(renderer, _bkColor.red(), _bkColor.green(), _bkColor.blue(), _bkColor.alpha());

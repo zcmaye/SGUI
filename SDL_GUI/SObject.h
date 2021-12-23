@@ -91,7 +91,8 @@ protected:
 	virtual void leaveEvent(SEvent* ev);
 private:
 	std::string _title;
-	SRect		_rect;
+	SRect		_rect;		//窗口矩形
+	SRect		_rrect;		//多个父子窗口堆叠，实际绘制的矩形区域
 	SSurface*	_icon;
 	float		_opacity;
 

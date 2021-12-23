@@ -169,6 +169,16 @@ int SRect::height() const
 	return _y2 - _y1;
 }
 
+bool SRect::operator==(const SRect& rect) const
+{
+	return (rect._x1 == _x1 && rect._y1 == _y1 && rect._x2 == _x2 && rect._y2 == _y2);;
+}
+
+bool SRect::operator!=(const SRect& rect) const
+{
+	return !(*this == rect);
+}
+
 void SRect::moveLeft(Sint32 pos) noexcept
 {
 	_x2 += (pos - _x1);	//把右边的x也移动pos大小，不过要注意方向
