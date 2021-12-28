@@ -33,5 +33,6 @@ public:
 	inline static SPostEventQue postEventQue;	//事件队列
 private:
 	bool handingEvent();
+
 };
 

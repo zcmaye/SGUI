@@ -70,6 +70,7 @@ SObject* findLastChild(SObject* obj, int x, int y)
 
 bool SApplication::handingEvent()
 {
+	static SWidget* prevFocusWidget = nullptr;	//上一个有焦点的控件
 	static SDL_Event ev;
 	while (SDL_PollEvent(&ev))
 	{
@@ -119,16 +120,30 @@ bool SApplication::handingEvent()
 			auto* widget = dynamic_cast<SWidget*>( findLastChild(root, ev.motion.x, ev.motion.y));
 			if (widget)
 			{
+				//如果此控件还没有获得焦点，就提交enter事件
+				if (!prevFocusWidget)
+				{
+					auto postEvent = SPostEvent(widget, new SEvent(SDL_EventType(SEvent::Enter)));
+					SApplication::postEventQue.push(postEvent);
+					prevFocusWidget = widget;
+				}
+			
 				SPoint localPos = widget->mapFrom((SWidget*)root, SPoint(ev.button.x, ev.button.y));
 				SApplication::postEventQue.push(SPostEvent(widget, new SMouseEvent(SDL_MOUSEMOTION, localPos, globalPos)));
-				//鼠标进入和离开控件事件处理
+
 			}
 			//没有在任何孩子身上，就传给主窗口
 			else
 			{
 				SApplication::postEventQue.push(SPostEvent(root, new SMouseEvent(SDL_MOUSEMOTION, globalPos, globalPos)));
 			}
-
+			//如果上一次有焦点的窗口，不是这一次的那么就提交leave事件
+			if (prevFocusWidget && prevFocusWidget!=widget)
+			{
+				auto postEvent = SPostEvent(prevFocusWidget, new SEvent(SDL_EventType(SEvent::Leave)));
+				SApplication::postEventQue.push(postEvent);
+				prevFocusWidget = nullptr;
+			}
 			break;
 		}
 		case SDL_SYSWMEVENT:

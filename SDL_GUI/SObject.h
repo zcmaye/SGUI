@@ -89,8 +89,8 @@ protected:
 	virtual void mouseMoveEvent(SMouseEvent* ev);
 	virtual void enterEvent(SEvent* ev);
 	virtual void leaveEvent(SEvent* ev);
-private:
-	std::string _title;
+protected:
+	std::string _text;
 	SRect		_rect;		//窗口矩形
 	SRect		_rrect;		//多个父子窗口堆叠，实际绘制的矩形区域
 	SSurface*	_icon;

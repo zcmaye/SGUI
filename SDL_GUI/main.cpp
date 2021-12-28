@@ -2,6 +2,7 @@
 #include"SObject.h"
 #include"SApplication.h"
 #include"SWindow.h"
+#include"SPushButton.h"
 using namespace std;
 int main(int argc, char* argv[])
 {
@@ -27,11 +28,8 @@ int main(int argc, char* argv[])
 	sw1->show();
 
 
-	SWidget* pw = new SWidget(sw1);
+	SPushButton* pw = new SPushButton(sw1);
 	pw->setWindowTitle("pw");
-	pw->setWindowPos(-10, -10);
-	pw->setWindowSize(50, 60);
-	pw->setBackgroundColor(SColor::Blue);
 	pw->show();
 	//delete sw;
 	//std::cout << &w << " " << sw << " " << sw1 << " " << pw << std::endl;*/

@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -152,7 +152,10 @@
     <ClCompile Include="SColor.cpp" />
     <ClCompile Include="SEvent.cpp" />
     <ClCompile Include="SGeometry.cpp" />
+    <ClCompile Include="SImage.cpp" />
+    <ClCompile Include="SPushButton.cpp" />
     <ClCompile Include="SSurface.cpp" />
+    <ClCompile Include="STexture.cpp" />
     <ClCompile Include="SWindow.cpp" />
     <ClCompile Include="SObject.cpp" />
   </ItemGroup>
@@ -162,7 +165,10 @@
     <ClInclude Include="SColor.h" />
     <ClInclude Include="SEvent.h" />
     <ClInclude Include="SGeometry.h" />
+    <ClInclude Include="SImage.h" />
+    <ClInclude Include="SPushButton.h" />
     <ClInclude Include="SSurface.h" />
+    <ClInclude Include="STexture.h" />
     <ClInclude Include="SWindow.h" />
     <ClInclude Include="SObject.h" />
   </ItemGroup>

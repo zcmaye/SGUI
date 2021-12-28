@@ -1,5 +1,6 @@
 #include "SSurface.h"
 #include"Configure.h"
+#include"SWindow.h"
 SSurface::SSurface()
 	:_surface(nullptr)
 {
@@ -37,4 +38,19 @@ SDL_Surface* SSurface::surface()
 SSurface::operator SDL_Surface* ()
 {
 	return _surface;
+}
+
+int SSurface::width() const
+{
+	return _surface->w;
+}
+
+int SSurface::height() const
+{
+	return _surface->h;
+}
+
+SDL_Texture* SSurface::sdlTexture() const
+{
+	return SDL_CreateTextureFromSurface(SWindow::instance()->renderer(), _surface);
 }

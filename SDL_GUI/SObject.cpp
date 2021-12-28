@@ -85,7 +85,7 @@ SWidget::SWidget(SObject* parent)
 }
 SWidget::~SWidget()
 {
-	std::cout << "~SWidget destroy " << _title << std::endl;
+	std::cout << "~SWidget destroy " << _text << std::endl;
 }
 
 void SWidget::show()
@@ -160,12 +160,12 @@ void SWidget::setWindowSize(int w, int h)
 
 std::string SWidget::windowTitle()const
 {
-	return _title;
+	return _text;
 }
 
 void SWidget::setWindowTitle(const std::string& title)
 {
-	_title = title;
+	_text = title;
 }
 
 SSurface* SWidget::windowIcon()const
@@ -329,12 +329,10 @@ void SWidget::paintEvent()
 			 irect = parentWidget->rect().intersected(this->frameGeometry());	
 			 //把自己左上角相对于父对象的坐标转为相对于SWindow的全局坐标
 			 irect.moveLeftTop(parentWidget->mapTo(SWindow::instance(), irect.leftTop()));
-			 std::clog <<"_rrect" << _rrect << std::endl;
+			 std::clog <<"_rrect "<<_text << _rrect << std::endl;
 		}
 	 }
-	
-
-	
+		
 
 	 const SDL_Rect& sdlRect = irect.sdlRect();
 	 SDL_SetRenderDrawColor(renderer, _bkColor.red(), _bkColor.green(), _bkColor.blue(), _bkColor.alpha());
@@ -370,22 +368,22 @@ void SWidget::mouseMoveEvent(SMouseEvent* ev)
 
 void SWidget::enterEvent(SEvent* ev)
 {
-	std::clog << "enterEvent" << std::endl;
+	std::clog << "enterEvent " <<_text<< std::endl;
 }
 
 void SWidget::leaveEvent(SEvent* ev)
 {
-	std::clog << "leaveEvent" << std::endl;
+	std::clog << "leaveEven " << _text<< std::endl;
 }
 
 std::ostream& operator<<(std::ostream& out, const SWidget& widget)
 {
-	out << "SWidget(" << /*&widget*/widget.frameGeometry() << "," << widget._title << ") ";
+	out << "SWidget(" << /*&widget*/widget.frameGeometry() << "," << widget._text << ") ";
 	return out;
 }
 
 std::ostream& operator<<(std::ostream& out, const SWidget* const widget)
 {
-	out << "SWidget(" << /*(int*)widget*/widget->frameGeometry() << "," << widget->_title << ") ";
+	out << "SWidget(" << /*(int*)widget*/widget->frameGeometry() << "," << widget->_text << ") ";
 	return out;
 }
