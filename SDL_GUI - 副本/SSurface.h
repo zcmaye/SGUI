@@ -6,7 +6,6 @@ class SSurface : public SImage
 {
 public:
 	SSurface();
-	SSurface(int w,int h);
 	SSurface(const std::string& file);
 	SSurface(SDL_Surface* _surface);
 	~SSurface();

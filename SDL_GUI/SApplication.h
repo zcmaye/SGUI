@@ -1,38 +1,28 @@
 ﻿#pragma once
 #include"Configure.h"
-#include<queue>
+#include<set>
 
 class SObject;
-class SEvent;
 
-class SPostEvent
-{
-public:
-	SObject* receiver;
-	SEvent* event;
-	inline SPostEvent()
-		: receiver(nullptr), event(nullptr)
-	{ }
-	inline SPostEvent(SObject* r, SEvent* e)
-		: receiver(r), event(e)
-	{ }
-};
-using SPostEventQue = std::queue<SPostEvent>;
-
+class SWidget;
 class SApplication
 {
 public:
 	SApplication(int argc, char* argv[]);
 	~SApplication();
-
-	void processEvents();
-	virtual bool notify(SObject* receiver, SEvent* event);
-
-	static SApplication* instance();
 	int exec();
-	inline static SPostEventQue postEventQue;	//事件队列
-private:
-	bool handingEvent();
 
+public:
+	inline static std::set<SWidget*> s_WindowQue;	//窗口事件队列
+	static void addWindow(SWidget* window);
+	static void removeWindow(SWidget* window);
+	static bool destroyAllWindows();
+private:
+	//判断所有窗口是否隐藏，根据这个判断应用程序是否退出
+	static bool  allWindowIsHidden();
+	static bool init();
+	static bool close();
 };
+
+
 

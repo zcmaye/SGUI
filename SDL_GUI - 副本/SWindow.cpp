@@ -149,3 +149,24 @@ SWindow* SWindow::instance()
 		throw nullptr;
 	return s_instance;
 }
+
+void SWindow::mousePressEvent(SMouseEvent* ev)
+{
+	std::clog<<"press"<<std::endl;
+}
+
+void SWindow::mouseReleaseEvent(SMouseEvent* ev)
+{
+	std::clog << "Release" << std::endl;
+}
+
+//不能让窗口移动，否则会出错
+void SWindow::mouseMoveEvent(SMouseEvent* ev)
+{
+	
+}
+
+void SWindow::paintEvent()
+{
+	SWidget::paintEvent();
+}

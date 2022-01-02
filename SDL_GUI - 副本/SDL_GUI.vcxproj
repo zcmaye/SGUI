@@ -156,7 +156,6 @@
     <ClCompile Include="SPushButton.cpp" />
     <ClCompile Include="SSurface.cpp" />
     <ClCompile Include="STexture.cpp" />
-    <ClCompile Include="SWidget.cpp" />
     <ClCompile Include="SWindow.cpp" />
     <ClCompile Include="SObject.cpp" />
   </ItemGroup>
@@ -170,7 +169,6 @@
     <ClInclude Include="SPushButton.h" />
     <ClInclude Include="SSurface.h" />
     <ClInclude Include="STexture.h" />
-    <ClInclude Include="SWidget.h" />
     <ClInclude Include="SWindow.h" />
     <ClInclude Include="SObject.h" />
   </ItemGroup>

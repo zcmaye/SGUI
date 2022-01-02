@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include"Configure.h"
-#include"SWidget.h"
+#include"SObject.h"
 class SWindow : public SWidget
 {
 public:
@@ -45,6 +45,11 @@ public:
 	SDL_Renderer* renderer();
 	operator SDL_Renderer* ();
 	static SWindow* instance();
+protected:
+	void mousePressEvent(SMouseEvent* ev)override;
+	void mouseReleaseEvent(SMouseEvent* ev)override;
+	void mouseMoveEvent(SMouseEvent* ev)override;
+	void paintEvent()override;
 private:
 	int _width;
 	int _height;

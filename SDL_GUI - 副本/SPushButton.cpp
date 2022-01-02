@@ -7,7 +7,7 @@ SPushButton::SPushButton(SWidget* parent)
 {
 	setBackgroundColor(SColor::Gray);
 	setWindowSize(100, 25);
-	setWindowTitle("SPushButton");
+	
 }
 
 void SPushButton::setColor(const SColor& bkcolor, const SColor& hovercolor)
@@ -16,20 +16,20 @@ void SPushButton::setColor(const SColor& bkcolor, const SColor& hovercolor)
 	_hoverColor = hovercolor;
 }
 
-void SPushButton::enterEvent(SDL_Event* ev)
+void SPushButton::enterEvent(SEvent* ev)
 {
 	
 	std::clog << "pushbutton enter" << std::endl;
 	setBackgroundColor(_hoverColor);
 }
 
-void SPushButton::leaveEvent(SDL_Event* ev)
+void SPushButton::leaveEvent(SEvent* ev)
 {
 	std::clog << "pushbutton leave" << std::endl;
 	setBackgroundColor(_bkColor);
 }
 
-void SPushButton::paintEvent(SDL_Event* ev)
+void SPushButton::paintEvent()
 {
-	SWidget::paintEvent(ev);
+	SWidget::paintEvent();
 }

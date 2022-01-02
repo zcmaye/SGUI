@@ -2,21 +2,11 @@
 #include"Configure.h"
 #include"SWindow.h"
 SSurface::SSurface()
-	:SSurface(250,250)
+	:_surface(nullptr)
 {
 }
 
-SSurface::SSurface(int w, int h)
-{
-	_surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
-	if (!_surface)
-	{
-		SDL_Log("SSurface load failed\n");
-		return;
-	}
-}
-
-SSurface::SSurface(const std::string& file) 
+SSurface::SSurface(const std::string& file)
 {
 #ifdef HAVE_IMAGE
 	_surface = IMG_Load(file.c_str());
