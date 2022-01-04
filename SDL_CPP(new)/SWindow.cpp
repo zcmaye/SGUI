@@ -2,13 +2,13 @@
 #include "SApplication.h"
 static SWindow* s_instance = nullptr;
 
-SWindow::SWindow(int w, int h)
+SWindow::SWindow(int w, int h, const std::string& title)
 	:_width(w),_height(h)
 	,_window(nullptr)
 	,_renderer(nullptr)
 	,_bkColor(SColor::White)
 {
-	_window = SDL_CreateWindow("SWindow", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		_width, _height, SDL_WINDOW_SHOWN);
 	if (!_window)
 	{
@@ -153,6 +153,24 @@ void SWindow::flush() const
 bool SWindow::event(SDL_Event* ev)
 {
 	return false;
+}
+
+bool SWindow::init()
+{
+	return true;
+}
+
+void SWindow::mainLoop()
+{
+
+}
+
+void SWindow::quit()
+{
+}
+
+void SWindow::draw()
+{
 }
 
 SWindow* SWindow::instance()

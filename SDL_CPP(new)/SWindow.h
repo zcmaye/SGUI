@@ -5,7 +5,7 @@
 class SWindow
 {
 public:
-	SWindow(int w, int h);
+	SWindow(int w=640, int h=480,const std::string& title = "SWindow");
 	~SWindow();
 
 	//让任务栏图标闪烁,传入闪烁选项
@@ -50,6 +50,13 @@ public:
 	void flush() const;			//刷新窗口
 	virtual bool event(SDL_Event* ev);
 	static SWindow* instance();
+public:	//游戏处理
+	virtual bool init();		//运行之前调用一次
+	virtual void quit();		//主循环退出调用
+	virtual void draw();		//每帧调用一次
+	virtual void mainLoop();	//游戏主循环
+	
+
 
 private:
 	int _width;

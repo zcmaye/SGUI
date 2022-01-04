@@ -148,8 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="SApplication.cpp" />
     <ClCompile Include="SColor.cpp" />
+    <ClCompile Include="SElapsedTimer.cpp" />
     <ClCompile Include="SGeometry.cpp" />
     <ClCompile Include="SImage.cpp" />
     <ClCompile Include="SSurface.cpp" />
@@ -159,8 +161,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Configure.h" />
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="SApplication.h" />
     <ClInclude Include="SColor.h" />
+    <ClInclude Include="SElapsedTimer.h" />
     <ClInclude Include="SGeometry.h" />
     <ClInclude Include="SImage.h" />
     <ClInclude Include="SSurface.h" />
